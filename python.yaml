@@ -1,0 +1,44 @@
+piVersion: 1.0.0
+metadata:
+  generateName: python-
+projects:
+  - name: python-hello-world
+    source:
+      type: zip
+      location: 'https://codeready-codeready-workspaces-operator.apps.sandbox-m2.ll9k.p1.openshiftapps.com/devfile-registry/resources/python-python-hello-world-master.zip'
+components:
+  - type: chePlugin
+    id: ms-python/python/latest
+    preferences:
+      python.globalModuleInstallation: true
+  - type: dockerimage
+    alias: python
+    image: 'registry.redhat.io/codeready-workspaces/plugin-java8-rhel8@sha256:b2ceb0039c763e6a38aa370157b476ecb08faf8b2bfb680bada774e149583d62'
+    memoryLimit: 512Mi
+    mountSources: true
+    endpoints:
+      - name: python
+        port: 8080
+commands:
+  - name: 1. Run
+    actions:
+      - type: exec
+        component: python
+        command: sudo pip install flask && python hello-world.py
+        workdir: '${CHE_PROJECTS_ROOT}/python-hello-world'
+  - name: Debug current file
+    actions:
+      - type: vscode-launch
+        referenceContent: |
+          {
+            "version": "0.2.0",
+            "configurations": [
+              {
+                "name": "Python: Current File",
+                "type": "python",
+                "request": "launch",
+                "program": "${file}",
+                "console": "internalConsole"
+              }
+            ]
+          }
